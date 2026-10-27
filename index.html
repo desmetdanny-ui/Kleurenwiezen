@@ -1,0 +1,537 @@
+<!doctype html>
+<html lang="nl" translate="no">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="google" content="notranslate">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Kleurenwiezen">
+<meta name="theme-color" content="#1f4d3a">
+<title>Kleurenwiezen</title>
+<link rel="icon" type="image/png" sizes="32x32" href="icon-32.png">
+<link rel="apple-touch-icon" sizes="180x180" href="icon-180.png">
+<link rel="apple-touch-icon" sizes="167x167" href="icon-167.png">
+<link rel="apple-touch-icon" sizes="152x152" href="icon-152.png">
+<link rel="apple-touch-icon" sizes="120x120" href="icon-120.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f3f0e8; --card:#fffdf8; --ink:#1f2a24; --muted:#6b7570; --line:#e0dacb;
+  --green:#1f4d3a; --green2:#2d6a50; --gold:#b08d3c; --pos:#1d6b48; --neg:#a63a3a; --posbg:#e3f1ea; --negbg:#f7e4e1;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0}
+body{background:var(--bg);color:var(--ink);font-family:Inter,system-ui,sans-serif;font-size:15px;line-height:1.45;padding-bottom:60px}
+header{background:var(--green);color:#fff;padding:calc(env(safe-area-inset-top) + 18px) 16px 0}
+header h1{font-family:'Cormorant Garamond',serif;font-weight:700;font-size:30px;margin:0;letter-spacing:.3px}
+header .sub{opacity:.8;font-size:13px;margin-top:2px}
+.tabs{display:flex;gap:4px;overflow-x:auto;margin:14px -16px 0;padding:0 16px;scrollbar-width:none}
+.tabs::-webkit-scrollbar{display:none}
+.tab{flex:0 0 auto;border:0;background:transparent;color:#cfe3d8;font:600 14px Inter,sans-serif;padding:10px 14px;border-radius:10px 10px 0 0;cursor:pointer}
+.tab.on{background:var(--bg);color:var(--green)}
+main{max-width:760px;margin:0 auto;padding:16px}
+h2{font-family:'Cormorant Garamond',serif;font-size:24px;margin:6px 0 10px;color:var(--green)}
+h3{font-size:13px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin:22px 0 8px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px 14px;margin-bottom:10px}
+.row{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.grow{flex:1 1 auto;min-width:0}
+.acts{display:flex;align-items:center;flex:0 0 auto;margin-left:auto}
+.muted{color:var(--muted);font-size:13px}
+.btn{border:0;background:var(--green);color:#fff;font:600 14px Inter,sans-serif;padding:10px 16px;border-radius:10px;cursor:pointer}
+.btn.alt{background:#fff;color:var(--green);border:1px solid var(--green)}
+.btn.ghost{background:transparent;color:var(--green);padding:8px 4px}
+.link{background:none;border:0;color:var(--neg);font:500 13px Inter,sans-serif;cursor:pointer;padding:4px}
+.pen{background:none;border:0;color:var(--gold);font-size:16px;cursor:pointer;padding:2px 6px}
+select,input[type=number],input[type=text],textarea{font:500 15px Inter,sans-serif;padding:9px 10px;border:1px solid var(--line);border-radius:10px;background:#fff;color:var(--ink);max-width:100%}
+textarea{width:100%;min-height:110px}
+label.f{display:block;margin:12px 0 4px;font-size:13px;font-weight:600;color:var(--muted)}
+.chips{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:8px}
+.chip{border-radius:9px;padding:5px 4px;text-align:center;font-size:12px;background:#efece3}
+.chip b{display:block;font-size:16px;font-variant-numeric:tabular-nums}
+.chip.pos{background:var(--posbg);color:var(--pos)}
+.chip.neg{background:var(--negbg);color:var(--neg)}
+table{border-collapse:collapse;width:100%;font-variant-numeric:tabular-nums}
+th,td{padding:8px 6px;text-align:right;border-bottom:1px solid var(--line);font-size:14px}
+th:first-child,td:first-child{text-align:left}
+th{font-size:12px;color:var(--muted);font-weight:600}
+td.pos{color:var(--pos)} td.neg{color:var(--neg)}
+tr.tot td{font-weight:700;border-top:2px solid var(--green)}
+.scroll{overflow-x:auto}
+.rank{display:flex;align-items:center;gap:12px;padding:12px 14px}
+.rank .n{font-family:'Cormorant Garamond',serif;font-size:28px;font-weight:700;color:var(--gold);width:28px}
+.rank .pts{font-size:22px;font-weight:700;font-variant-numeric:tabular-nums}
+.banner{background:#fff6dc;border:1px solid #ecd9a0;border-radius:12px;padding:10px 12px;font-size:13px;margin-bottom:12px}
+.dateRow{cursor:pointer}
+.dateRow.next{border-color:var(--gold);box-shadow:0 0 0 2px #f1e4bf}
+.badge{display:inline-block;font-size:11px;font-weight:600;border-radius:20px;padding:2px 9px;background:#efece3;color:var(--muted)}
+.badge.gold{background:#f1e4bf;color:#7a5f1c}
+ol.rules,ul.rules{margin:6px 0 0;padding-left:20px}
+ol.rules li,ul.rules li{margin:3px 0}
+.modalBg{position:fixed;inset:0;background:rgba(20,30,25,.55);display:flex;align-items:flex-end;justify-content:center;z-index:50}
+.modal{background:var(--bg);width:100%;max-width:560px;max-height:92vh;overflow:auto;border-radius:18px 18px 0 0;padding:16px 16px calc(env(safe-area-inset-bottom) + 18px)}
+.modal h2{margin-top:0}
+.preview{margin-top:14px;padding:10px;border-radius:12px;background:#fff;border:1px dashed var(--line)}
+.pl{display:flex;align-items:center;gap:12px;padding:6px 0;border-bottom:1px solid var(--line)}
+.pl:last-child{border-bottom:0}
+.tbl td input{width:64px;text-align:right}
+@media (min-width:700px){.modalBg{align-items:center}.modal{border-radius:18px}}
+</style>
+</head>
+<body>
+<header>
+  <h1>Kleurenwiezen</h1>
+  <div class="sub">Partijen, score en klassement</div>
+  <div class="tabs" id="tabs"></div>
+</header>
+<main id="view"></main>
+<div id="modal"></div>
+
+<script>
+/* ============ Instellingen ============ */
+const SLUG = 'kleurenwiezen';
+// Plak hier de firebaseConfig van de Wiezenkalender (project wiezen-club), bv:
+// const FIREBASE_CONFIG = { apiKey:'...', authDomain:'...', projectId:'wiezen-club', ... };
+const FIREBASE_CONFIG = null;
+const LS_KEY = 'kleurenwiezen-v1';
+
+/* ============ Standaardwaarden ============ */
+const DEFAULT_TABLES = {
+  accept: {8:8, 9:11, 10:14, 11:17, 12:20, 13:23}, // waarde per slagen-niveau (13 = basis voor verlies)
+  accept13win: 30,
+  acceptUnder: 3,
+  solo: {5:3, 6:4, 7:5, 8:7},
+  soloOver: 1, soloUnder: 1, soloCap: 8,
+  abondance: {9:10, 10:15, 11:20, 12:30},
+  fixed: {kleine:6, grote:12, open:24, piccolo:8, troel:16, troel13:30, slim:60},
+  troelMin: 8
+};
+const DEFAULT_PLAYERS = ['Danny','Luc','Lode','Herwig'];
+const TYPES = {
+  accept:   {label:'Vraag en meegaan', kind:'team', min:8, max:13},
+  solo:     {label:'Solo',             kind:'solo', min:5, max:8},
+  abondance:{label:'Abondance',        kind:'solo', min:9, max:12},
+  troel:    {label:'Troel',            kind:'team'},
+  kleine:   {label:'Kleine miserie',   kind:'pf'},
+  grote:    {label:'Grote miserie',    kind:'pf'},
+  open:     {label:'Open miserie',     kind:'pf'},
+  piccolo:  {label:'Piccolo',          kind:'pf'},
+  slim:     {label:'Solo slim',        kind:'pf1'}
+};
+
+/* ============ Staat ============ */
+const uid = () => Math.random().toString(36).slice(2,9) + Date.now().toString(36).slice(-3);
+function lastTuesdays(){
+  const out=[];
+  for(let y=2026;y<=2028;y++) for(let m=0;m<12;m++){
+    if(y===2026 && m<6) continue;
+    const d=new Date(Date.UTC(y,m+1,0));
+    while(d.getUTCDay()!==2) d.setUTCDate(d.getUTCDate()-1);
+    out.push(d.toISOString().slice(0,10));
+  }
+  return out;
+}
+function freshState(){
+  return {
+    players: DEFAULT_PLAYERS.map((n,i)=>({id:'p'+(i+1),name:n})),
+    dates: lastTuesdays().map(d=>({id:uid(),date:d,host:'',dealer0:0,deals:[]})),
+    tables: JSON.parse(JSON.stringify(DEFAULT_TABLES)),
+    notes: ''
+  };
+}
+function normalize(s){
+  const f=freshState();
+  s=s||{};
+  s.players = (s.players&&s.players.length===4)?s.players:f.players;
+  s.dates = Array.isArray(s.dates)?s.dates:f.dates;
+  s.dates.forEach(d=>{d.deals=d.deals||[]; if(d.dealer0==null)d.dealer0=0; d.host=d.host||'';});
+  const t=s.tables||{};
+  s.tables = Object.assign({},DEFAULT_TABLES,t);
+  ['accept','solo','abondance','fixed'].forEach(k=>s.tables[k]=Object.assign({},DEFAULT_TABLES[k],t[k]||{}));
+  s.notes=s.notes||'';
+  return s;
+}
+let state, db=null, docRef=null, saveTimer=null;
+let ui = {tab:'datums', dateId:null};
+
+function loadLocal(){
+  try{ const r=localStorage.getItem(LS_KEY); if(r) return normalize(JSON.parse(r)); }catch(e){}
+  return freshState();
+}
+function saveLocal(){ try{ localStorage.setItem(LS_KEY, JSON.stringify(state)); }catch(e){} }
+function save(){
+  saveLocal();
+  if(docRef){
+    clearTimeout(saveTimer);
+    saveTimer=setTimeout(()=>{ docRef.set({json:JSON.stringify(state),updated:Date.now()}).catch(e=>console.warn('Firebase',e)); },600);
+  }
+}
+function loadScript(src){return new Promise((res,rej)=>{const s=document.createElement('script');s.src=src;s.onload=res;s.onerror=rej;document.head.appendChild(s);});}
+async function initFirebase(){
+  if(!FIREBASE_CONFIG) return;
+  try{
+    await loadScript('https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js');
+    await loadScript('https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js');
+    firebase.initializeApp(FIREBASE_CONFIG);
+    db=firebase.firestore();
+    docRef=db.collection('guides').doc(SLUG);
+    docRef.onSnapshot(snap=>{
+      if(snap.metadata.hasPendingWrites) return;
+      if(snap.exists && snap.data().json){
+        try{ state=normalize(JSON.parse(snap.data().json)); saveLocal(); if(!document.getElementById('modal').innerHTML) render(); }catch(e){console.warn(e);}
+      } else { docRef.set({json:JSON.stringify(state),updated:Date.now()}); }
+    });
+  }catch(e){ console.warn('Firebase niet beschikbaar, lokaal opgeslagen',e); docRef=null; }
+}
+
+/* ============ Hulpfuncties ============ */
+const esc = s => String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const pname = id => (state.players.find(p=>p.id===id)||{name:'?'}).name;
+const fmtPts = n => (n>0?'+':'')+n;
+function fmtDate(iso,short){
+  const d=new Date(iso+'T12:00:00');
+  if(isNaN(d)) return iso;
+  return d.toLocaleDateString('nl-BE', short?{day:'numeric',month:'short',year:'numeric'}:{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+}
+const todayIso = () => { const d=new Date(); return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'); };
+const dateById = id => state.dates.find(d=>d.id===id);
+function sortDates(){ state.dates.sort((a,b)=>a.date<b.date?-1:a.date>b.date?1:0); }
+
+/* ============ Puntentelling ============ */
+function scoreDeal(d, T, pids){
+  T = T || state.tables;
+  pids = pids || state.players.map(p=>p.id);
+  const pts = Object.fromEntries(pids.map(p=>[p,0]));
+  if(!d || d.type==='pas' || !TYPES[d.type] || !d.players || !d.players.length) return pts;
+  const add=(p,v)=>{pts[p]+=v;};
+  const others = set => pids.filter(p=>!set.includes(p));
+  const kind = TYPES[d.type].kind;
+  const teamPay = X => { d.players.forEach(p=>add(p,X)); others(d.players).forEach(p=>add(p,-X)); };
+  const soloPay = (p,X) => { add(p,3*X); others([p]).forEach(o=>add(o,-X)); };
+  const k = +d.tricks, N = +d.N;
+  if(d.type==='accept'){
+    const X = k>=N ? (k===13 ? T.accept13win : T.accept[k]) : -(T.accept[N] + T.acceptUnder*(N-k));
+    teamPay(X);
+  } else if(d.type==='troel'){
+    const X = k>=T.troelMin ? (k===13 ? T.fixed.troel13 : T.fixed.troel) : -T.fixed.troel;
+    teamPay(X);
+  } else if(d.type==='solo'){
+    const X = k>=N ? T.solo[N] + (Math.min(k,T.soloCap)-N)*T.soloOver : -(T.solo[N] + T.soloUnder*(N-k));
+    soloPay(d.players[0],X);
+  } else if(d.type==='abondance'){
+    const X = k>=N ? T.abondance[Math.min(k,12)] : -T.abondance[N];
+    soloPay(d.players[0],X);
+  } else if(kind==='pf' || kind==='pf1'){
+    const v = T.fixed[d.type];
+    d.players.forEach(p=>{ const ok = !d.results || d.results[p]!==false; soloPay(p, ok?v:-v); });
+  }
+  if(d.dubbel) pids.forEach(p=>pts[p]*=2);
+  return pts;
+}
+function dealerFor(date, idx){
+  let c=0; for(let i=0;i<idx;i++) if(date.deals[i].type!=='pas') c++;
+  return state.players[(date.dealer0 + c) % 4];
+}
+function describe(d){
+  const t=TYPES[d.type]; if(!t) return d.type==='pas'?'Pasronde, iedereen past':d.type;
+  const names=d.players.map(pname);
+  const lvl = t.min ? ' '+d.N : '';
+  if(t.kind==='team') return `${t.label}${lvl}: ${names.join(' + ')}, ${d.tricks} slagen`;
+  if(t.kind==='solo') return `${t.label}${lvl}: ${names[0]}, ${d.tricks} slagen`;
+  const res = d.players.map(p=>pname(p)+(d.results&&d.results[p]===false?' (mislukt)':' (gelukt)')).join(', ');
+  return `${t.label}: ${res}`;
+}
+function dateTotals(date){
+  const tot=Object.fromEntries(state.players.map(p=>[p.id,0]));
+  date.deals.forEach(d=>{ const s=scoreDeal(d); for(const k in s) tot[k]+=s[k]; });
+  return tot;
+}
+const playedDeals = date => date.deals.filter(d=>d.type!=='pas').length;
+
+/* ============ Weergave ============ */
+function setTab(t){ ui.tab=t; render(); window.scrollTo(0,0); }
+function render(){
+  sortDates();
+  if(!ui.dateId || !dateById(ui.dateId)) ui.dateId = defaultDateId();
+  const tabs=[['datums','Datums'],['partij','Partij'],['klassement','Klassement'],['regels','Regels']];
+  document.getElementById('tabs').innerHTML = tabs.map(([k,l])=>`<button class="tab ${ui.tab===k?'on':''}" onclick="setTab('${k}')">${l}</button>`).join('');
+  const v=document.getElementById('view');
+  const banner = (!FIREBASE_CONFIG) ? `<div class="banner">Opslag staat nu alleen op dit toestel. Plak de Firebase-config in het bestand (bovenaan het script) om te delen tussen jullie vieren.</div>` : '';
+  v.innerHTML = banner + ({datums:viewDatums,partij:viewPartij,klassement:viewKlassement,regels:viewRegels}[ui.tab])();
+}
+function defaultDateId(){
+  const t=todayIso();
+  const up=state.dates.find(d=>d.date>=t);
+  return (up||state.dates[state.dates.length-1]).id;
+}
+
+function viewDatums(){
+  const t=todayIso();
+  const next=state.dates.find(d=>d.date>=t);
+  let html=`<h2>Speeldata</h2><p class="muted">Per datum wordt één partij gespeeld. Tik op een datum om de deeltjes in te geven.</p>`;
+  html+=state.dates.map(d=>{
+    const n=playedDeals(d);
+    const isNext = next && next.id===d.id;
+    return `<div class="card dateRow ${isNext?'next':''}" onclick="openDate('${d.id}')">
+      <div class="row"><div class="grow"><b>${esc(fmtDate(d.date))}</b>
+        <div class="muted">${d.host?'Bij '+esc(d.host)+' · ':''}${n?n+' deeltje'+(n>1?'s':''):'nog niet gespeeld'}</div></div>
+        ${isNext?'<span class="badge gold">volgende</span>':''}
+        <button class="pen" title="Aanpassen" onclick="event.stopPropagation();editDate('${d.id}')">✎</button>
+      </div></div>`;
+  }).join('');
+  html+=`<button class="btn alt" onclick="addDate()">+ Datum toevoegen</button>`;
+  return html;
+}
+function openDate(id){ ui.dateId=id; setTab('partij'); }
+function editDate(id){
+  const d=dateById(id);
+  const nd=prompt('Datum (jjjj-mm-dd):', d.date);
+  if(nd===null) return;
+  if(!/^\d{4}-\d{2}-\d{2}$/.test(nd.trim())){ alert('Gebruik het formaat jjjj-mm-dd.'); return; }
+  d.date=nd.trim();
+  const h=prompt('Waar wordt gespeeld? (leeg laten = niet ingevuld)', d.host);
+  if(h!==null) d.host=h.trim();
+  if(!d.deals.length && confirm('Deze datum verwijderen? (Annuleren om te bewaren)')){ state.dates=state.dates.filter(x=>x.id!==id); }
+  save(); render();
+}
+function addDate(){
+  const nd=prompt('Nieuwe datum (jjjj-mm-dd):', todayIso());
+  if(!nd) return;
+  if(!/^\d{4}-\d{2}-\d{2}$/.test(nd.trim())){ alert('Gebruik het formaat jjjj-mm-dd.'); return; }
+  const o={id:uid(),date:nd.trim(),host:'',dealer0:0,deals:[]};
+  state.dates.push(o); ui.dateId=o.id; save(); render();
+}
+
+function viewPartij(){
+  const date=dateById(ui.dateId);
+  const opts=state.dates.map(d=>`<option value="${d.id}" ${d.id===date.id?'selected':''}>${esc(fmtDate(d.date,true))}${playedDeals(d)?' ('+playedDeals(d)+')':''}</option>`).join('');
+  let html=`<h2>Partij</h2>
+  <div class="row"><select onchange="ui.dateId=this.value;render()" class="grow">${opts}</select></div>
+  <div class="row" style="margin-top:10px">
+    <span class="muted">Eerste deler</span>
+    <select onchange="dateById('${date.id}').dealer0=+this.value;save();render()">${state.players.map((p,i)=>`<option value="${i}" ${date.dealer0===i?'selected':''}>${esc(p.name)}</option>`).join('')}</select>
+  </div>`;
+  if(!date.deals.length) html+=`<div class="card" style="margin-top:14px"><span class="muted">Nog geen deeltjes. Voeg het eerste toe.</span></div>`;
+  let n=0;
+  html+=date.deals.map((d,i)=>{
+    const dealer=dealerFor(date,i);
+    if(d.type==='pas') return `<div class="card" style="margin-top:10px"><div class="row" style="flex-wrap:nowrap"><div class="grow"><b>Pasronde</b><div class="muted">${esc(dealer.name)} deelt opnieuw. Volgend spel telt dubbel.</div></div>
+      <div class="acts"><button class="link" onclick="delDeal('${date.id}','${d.id}')">verwijder</button></div></div></div>`;
+    n++;
+    const s=scoreDeal(d);
+    const chips=state.players.map(p=>`<div class="chip ${s[p.id]>0?'pos':s[p.id]<0?'neg':''}">${esc(p.name)}<b>${fmtPts(s[p.id])}</b></div>`).join('');
+    return `<div class="card" style="margin-top:10px">
+      <div class="row" style="flex-wrap:nowrap"><div class="grow"><div class="muted">Deeltje ${n} · deler ${esc(dealer.name)}${d.dubbel?' · <b>dubbel</b>':''}</div>
+      <div><b>${esc(describe(d))}</b></div></div>
+      <div class="acts"><button class="pen" onclick="openForm('${date.id}','${d.id}')">✎</button>
+      <button class="link" onclick="delDeal('${date.id}','${d.id}')">verwijder</button></div></div>
+      <div class="chips">${chips}</div></div>`;
+  }).join('');
+  html+=`<div class="row" style="margin-top:14px">
+    <button class="btn" onclick="openForm('${date.id}')">+ Deeltje</button>
+    <button class="btn alt" onclick="addPas('${date.id}')">Pasronde</button></div>`;
+  const tot=dateTotals(date);
+  const sorted=[...state.players].sort((a,b)=>tot[b.id]-tot[a.id]);
+  html+=`<h3>Stand van deze datum</h3><div class="card"><table><tr>${sorted.map(p=>`<th style="text-align:center">${esc(p.name)}</th>`).join('')}</tr>
+    <tr>${sorted.map(p=>`<td class="${tot[p.id]>0?'pos':tot[p.id]<0?'neg':''}" style="text-align:center;font-weight:700;font-size:18px">${fmtPts(tot[p.id])}</td>`).join('')}</tr></table></div>`;
+  return html;
+}
+function delDeal(dateId,dealId){
+  if(!confirm('Dit deeltje verwijderen?')) return;
+  const d=dateById(dateId); d.deals=d.deals.filter(x=>x.id!==dealId); save(); render();
+}
+function addPas(dateId){
+  const d=dateById(dateId); d.deals.push({id:uid(),type:'pas',players:[]}); save(); render();
+}
+
+function viewKlassement(){
+  const pl=state.players;
+  const played=state.dates.filter(d=>playedDeals(d)>0);
+  const total=Object.fromEntries(pl.map(p=>[p.id,0]));
+  const wins=Object.fromEntries(pl.map(p=>[p.id,0]));
+  const per=played.map(d=>{
+    const t=dateTotals(d); pl.forEach(p=>total[p.id]+=t[p.id]);
+    const max=Math.max(...pl.map(p=>t[p.id]));
+    pl.forEach(p=>{ if(t[p.id]===max && max>0) wins[p.id]++; });
+    return {d,t,max};
+  });
+  const ranked=[...pl].sort((a,b)=>total[b.id]-total[a.id]);
+  let html=`<h2>Klassement</h2>`;
+  if(!played.length) return html+`<div class="card"><span class="muted">Er zijn nog geen partijen gespeeld.</span></div>`;
+  html+=ranked.map((p,i)=>`<div class="card rank"><div class="n">${i+1}</div><div class="grow"><b>${esc(p.name)}</b>
+    <div class="muted">${wins[p.id]} datum${wins[p.id]===1?'':'s'} gewonnen</div></div>
+    <div class="pts" style="color:${total[p.id]>0?'var(--pos)':total[p.id]<0?'var(--neg)':'inherit'}">${fmtPts(total[p.id])}</div></div>`).join('');
+  html+=`<h3>Per datum</h3><div class="card scroll"><table><tr><th>Datum</th>${pl.map(p=>`<th>${esc(p.name)}</th>`).join('')}</tr>`+
+    per.map(({d,t,max})=>`<tr><td>${esc(fmtDate(d.date,true))}</td>${pl.map(p=>`<td class="${t[p.id]>0?'pos':t[p.id]<0?'neg':''}" ${t[p.id]===max&&max>0?'style="font-weight:700"':''}>${fmtPts(t[p.id])}</td>`).join('')}</tr>`).join('')+
+    `<tr class="tot"><td>Totaal</td>${pl.map(p=>`<td>${fmtPts(total[p.id])}</td>`).join('')}</tr></table></div>
+    <p class="muted">Som van alle spelers: ${pl.reduce((a,p)=>a+total[p.id],0)} (moet 0 zijn).</p>
+    <h3>Spelers</h3><div class="card">`+
+    pl.map(p=>`<div class="row" style="padding:4px 0"><div class="grow">${esc(p.name)}</div><button class="pen" onclick="renamePlayer('${p.id}')">✎</button></div>`).join('')+`</div>`;
+  return html;
+}
+function renamePlayer(id){
+  const p=state.players.find(x=>x.id===id);
+  const n=prompt('Naam:',p.name); if(n===null||!n.trim()) return;
+  p.name=n.trim(); save(); render();
+}
+
+/* ============ Regels ============ */
+function editNum(path){
+  const T=state.tables; const parts=path.split('.');
+  let o=T; for(let i=0;i<parts.length-1;i++) o=o[parts[i]];
+  const key=parts[parts.length-1];
+  const v=prompt('Nieuwe waarde:', o[key]); if(v===null) return;
+  const n=Number(String(v).replace(',','.')); if(isNaN(n)){alert('Geef een getal.');return;}
+  o[key]=n; save(); render();
+}
+function resetTables(){
+  if(!confirm('Alle puntenwaarden terugzetten naar de standaardtabel?')) return;
+  state.tables=JSON.parse(JSON.stringify(DEFAULT_TABLES)); save(); render();
+}
+const pen = path => `<button class="pen" onclick="editNum('${path}')">✎</button>`;
+function viewRegels(){
+  const T=state.tables;
+  const accRows=[8,9,10,11,12,13].map(n=>`<tr><td>Vraag en meegaan ${n}</td><td>${n===13?T.accept13win:T.accept[n]}${n===13?pen('accept13win'):pen('accept.'+n)}</td><td>${n===13?T.accept[13]+3:T.accept[n]+T.acceptUnder}</td></tr>`).join('');
+  const soloRows=[5,6,7,8].map(n=>`<tr><td>Solo ${n}</td><td>${T.solo[n]}${pen('solo.'+n)}</td><td>${T.solo[n]+T.soloUnder}</td></tr>`).join('');
+  const abRows=[9,10,11,12].map(n=>`<tr><td>Abondance ${n}</td><td>${T.abondance[n]}${pen('abondance.'+n)}</td><td>${T.abondance[n]}</td></tr>`).join('');
+  const fx=(k,l)=>`<tr><td>${l}</td><td>${T.fixed[k]}${pen('fixed.'+k)}</td><td>${T.fixed[k]}</td></tr>`;
+  return `<h2>Regels</h2>
+  <p class="muted">Gebaseerd op de regels van <a href="https://www.whisthub.com/rules" target="_blank" rel="noopener">Whisthub</a> en <a href="https://www.pagat.com/boston/kleurenwiezen.html" target="_blank" rel="noopener">pagat.com</a>. Kleurenwiezen heeft geen officiële standaard, dus noteer hieronder wat jullie anders doen.</p>
+
+  <h3>Basis</h3>
+  <div class="card"><ul class="rules">
+    <li>4 spelers, 13 kaarten elk. Kleur bekennen is verplicht, kan je niet bekennen dan mag je troeven of afgooien.</li>
+    <li>Rangorde in een kleur: aas, heer, vrouw, boer, 10 tot 2.</li>
+    <li>Kleurrangorde (bepaalt het hoogste bod bij gelijke waarde): harten, ruiten, klaveren, schoppen.</li>
+    <li>Na elk spel wordt niet geschud, alleen gesneden. De deler wisselt per spel, links van de deler komt uit.</li>
+    <li>De som van de punten van de vier spelers is altijd nul.</li>
+  </ul></div>
+
+  <h3>Wat kan en wat niet kan</h3>
+  <div class="card"><ul class="rules">
+    <li><b>Vraag:</b> je stelt een kleur voor waarvan je minstens één kaart hebt. <b>Meegaan:</b> een ander gaat mee, jullie zijn partners en spelen samen minstens 8 slagen met die kleur als troef (te verhogen tot 13).</li>
+    <li><b>Solo:</b> alleen in een kleur die je eerder voorstelde, tenzij niemand meer kan meegaan. Minstens 5 slagen (sommige groepen 6), te verhogen tot 8. Bij een hoger bod van een ander moet je passen.</li>
+    <li><b>Abondance</b> (9 tot 12 slagen met eigen troef) en <b>solo slim</b> (alle 13 slagen) kan alleen als je nog niet geboden hebt. Bij abondance kom je zelf uit.</li>
+    <li><b>Miserie:</b> geen troef, je mag geen enkele slag maken. Bij kleine miserie legt iedereen vooraf één kaart weg, bij grote niet, bij open miserie liggen jouw kaarten open. Meerdere spelers kunnen tegelijk miserie bieden en worden apart afgerekend.</li>
+    <li><b>Piccolo:</b> precies één slag, geen troef. Niet in elke groep gebruikt.</li>
+    <li><b>Troel:</b> wie 3 of 4 azen heeft. Wordt automatisch aangekondigd en je speelt samen met de bezitter van het vierde aas (bij 4 azen met de bezitter van harten heer). Het team haalt minstens 8 slagen, in sommige regio's 9.</li>
+    <li><b>Passen en wachten:</b> wie past, doet niet meer mee. De speler links van de deler mag bij zijn eerste beurt wachten en later nog meegaan.</li>
+    <li><b>Pasronde:</b> past iedereen, dan deelt dezelfde deler opnieuw en tellen de punten van het volgende spel dubbel. Meerdere pasrondes na elkaar verdubbelen niet verder.</li>
+  </ul></div>
+
+  <h3>Biedvolgorde, hoog naar laag (Whisthub)</h3>
+  <div class="card"><ol class="rules">
+    <li>Solo slim</li><li>Abondance 12</li><li>Open miserie</li><li>Abondance 11</li><li>Abondance 10</li><li>Grote miserie</li><li>Troel</li><li>Abondance 9</li>
+    <li>Meegaan 13</li><li>Piccolo</li><li>Solo 8</li><li>Meegaan 12</li><li>Kleine miserie</li><li>Meegaan 11</li><li>Solo 7</li><li>Meegaan 10</li><li>Solo 6</li><li>Meegaan 9</li><li>Solo 5</li><li>Meegaan 8 (vraag en meegaan)</li>
+  </ol></div>
+
+  <h3>Puntentabel</h3>
+  <p class="muted">Tik op het potlood om een waarde aan te passen. Teamcontracten: beide partners krijgen de waarde, de tegenstanders het omgekeerde. Solo, abondance, miserie, piccolo en slim: de solist krijgt 3 keer de waarde, elke tegenstander één keer het omgekeerde.</p>
+  <div class="card scroll"><table><tr><th>Contract</th><th>Gehaald</th><th>Mislukt</th></tr>
+    ${accRows}${soloRows}${abRows}
+    ${fx('kleine','Kleine miserie')}${fx('piccolo','Piccolo')}${fx('troel','Troel')}${fx('grote','Grote miserie')}${fx('open','Open miserie')}${fx('slim','Solo slim')}
+  </table>
+  <ul class="rules" style="margin-top:10px">
+    <li>Vraag en meegaan: elke extra slag boven het bod telt mee tot 13 slagen. Mislukt: de waarde van het bod plus ${T.acceptUnder}${pen('acceptUnder')} per ontbrekende slag. Bij 13 slagen halen is de waarde ${T.accept13win}.</li>
+    <li>Solo: extra slagen tellen ${T.soloOver}${pen('soloOver')} punt tot ${T.soloCap}${pen('soloCap')} slagen, daarboven niet meer. Mislukt: de waarde plus ${T.soloUnder}${pen('soloUnder')} per ontbrekende slag.</li>
+    <li>Abondance: meer slagen dan geboden betaalt het hogere niveau. Mislukt: altijd de waarde van het bod.</li>
+    <li>Troel: ${T.fixed.troel} punten, ${T.fixed.troel13}${pen('fixed.troel13')} bij 13 slagen. Het team moet minstens ${T.troelMin}${pen('troelMin')} slagen halen.</li>
+  </ul>
+  <button class="btn ghost" onclick="resetTables()">Standaardtabel terugzetten</button></div>
+
+  <h3>Onze afspraken</h3>
+  <p class="muted">Bijvoorbeeld de kleurrangorde, 8 of 9 slagen bij troel, of solo 5 wel of niet toegestaan.</p>
+  <textarea id="notes" placeholder="Schrijf hier wat jullie afspreken" oninput="state.notes=this.value;save()">${esc(state.notes)}</textarea>`;
+}
+
+/* ============ Formulier voor een deeltje ============ */
+let form=null;
+function openForm(dateId, dealId){
+  const date=dateById(dateId);
+  if(dealId){
+    form=JSON.parse(JSON.stringify(date.deals.find(x=>x.id===dealId)));
+    form.dateId=dateId; form.results=form.results||{};
+  } else {
+    const prev=date.deals[date.deals.length-1];
+    form={id:null,dateId,type:'accept',N:8,players:[],results:{},tricks:8,dubbel:!!(prev&&prev.type==='pas')};
+  }
+  renderForm();
+}
+function closeForm(){ form=null; document.getElementById('modal').innerHTML=''; }
+function fType(t){
+  form.type=t; const T=TYPES[t];
+  form.N = T.min || null;
+  form.tricks = T.min || (t==='troel'?state.tables.troelMin:8);
+  const need = T.kind==='team'?2 : (T.kind==='solo'||T.kind==='pf1')?1 : 0;
+  if(need) form.players=form.players.slice(0,need);
+  form.results={}; form.players.forEach(p=>form.results[p]=true);
+  renderForm();
+}
+function fN(n){ form.N=+n; form.tricks=+n; renderForm(); }
+function fPlayer(i,v){ form.players[i]=v||undefined; if(v) form.results[v]=true; renderForm(); }
+function fToggle(pid,on){
+  if(on){ if(!form.players.includes(pid)) form.players.push(pid); form.results[pid]=true; }
+  else form.players=form.players.filter(x=>x!==pid);
+  renderForm();
+}
+function fRes(pid,v){ form.results[pid]=v; renderForm(); }
+function fTricks(v){ form.tricks=+v; renderForm(); }
+function fDubbel(v){ form.dubbel=v; renderForm(); }
+function formValid(){
+  const T=TYPES[form.type];
+  if(T.kind==='team') return form.players.length===2 && form.players[0] && form.players[1] && form.players[0]!==form.players[1];
+  if(T.kind==='solo'||T.kind==='pf1') return form.players.length===1 && !!form.players[0];
+  return form.players.length>=1;
+}
+function renderForm(){
+  const T=TYPES[form.type];
+  const pl=state.players;
+  const sel=(i,label)=>`<label class="f">${label}</label><select onchange="fPlayer(${i},this.value)"><option value="">Kies…</option>${pl.map(p=>`<option value="${p.id}" ${form.players[i]===p.id?'selected':''}>${esc(p.name)}</option>`).join('')}</select>`;
+  let body=`<label class="f">Contract</label><select onchange="fType(this.value)">${Object.entries(TYPES).map(([k,t])=>`<option value="${k}" ${form.type===k?'selected':''}>${t.label}</option>`).join('')}</select>`;
+  if(T.min){
+    let o=''; for(let n=T.min;n<=T.max;n++) o+=`<option value="${n}" ${+form.N===n?'selected':''}>${n} slagen</option>`;
+    body+=`<label class="f">Bod</label><select onchange="fN(this.value)">${o}</select>`;
+  }
+  if(T.kind==='team') body+=sel(0,form.type==='troel'?'Speler met de azen':'Vrager')+sel(1,form.type==='troel'?'Partner':'Meegegaan');
+  if(T.kind==='solo') body+=sel(0,'Speler');
+  if(T.kind==='pf1') body+=sel(0,'Speler')+(form.players[0]?`<label class="f">Resultaat</label><select onchange="fRes('${form.players[0]}',this.value==='1')"><option value="1" ${form.results[form.players[0]]!==false?'selected':''}>Gelukt (13 slagen)</option><option value="0" ${form.results[form.players[0]]===false?'selected':''}>Mislukt</option></select>`:'');
+  if(T.kind==='pf'){
+    body+=`<label class="f">Wie speelt mee en is het gelukt?</label>`+pl.map(p=>{
+      const on=form.players.includes(p.id);
+      return `<div class="pl"><label class="row grow" style="gap:8px"><input type="checkbox" ${on?'checked':''} onchange="fToggle('${p.id}',this.checked)"> ${esc(p.name)}</label>
+      ${on?`<label class="row" style="gap:6px"><input type="checkbox" ${form.results[p.id]!==false?'checked':''} onchange="fRes('${p.id}',this.checked)"> gelukt</label>`:''}</div>`;
+    }).join('');
+  }
+  if(T.kind==='team'||T.kind==='solo'){
+    let o=''; for(let n=0;n<=13;n++) o+=`<option value="${n}" ${+form.tricks===n?'selected':''}>${n}</option>`;
+    body+=`<label class="f">Slagen gehaald${T.kind==='team'?' door het team':''}</label><select onchange="fTricks(this.value)">${o}</select>`;
+  }
+  body+=`<label class="row" style="gap:8px;margin-top:14px"><input type="checkbox" ${form.dubbel?'checked':''} onchange="fDubbel(this.checked)"> Dubbel (na pasronde)</label>`;
+  let prev='<span class="muted">Vul de spelers in om de punten te zien.</span>';
+  if(formValid()){
+    const s=scoreDeal(form);
+    prev=`<div class="chips">${pl.map(p=>`<div class="chip ${s[p.id]>0?'pos':s[p.id]<0?'neg':''}">${esc(p.name)}<b>${fmtPts(s[p.id])}</b></div>`).join('')}</div>`;
+  }
+  document.getElementById('modal').innerHTML=`<div class="modalBg" onclick="if(event.target===this)closeForm()"><div class="modal">
+    <h2>${form.id?'Deeltje aanpassen':'Nieuw deeltje'}</h2>${body}
+    <div class="preview"><div class="muted" style="margin-bottom:6px">Punten</div>${prev}</div>
+    <div class="row" style="margin-top:16px"><button class="btn" ${formValid()?'':'disabled style="opacity:.4"'} onclick="saveForm()">Opslaan</button><button class="btn alt" onclick="closeForm()">Annuleren</button></div>
+  </div></div>`;
+}
+function saveForm(){
+  if(!formValid()) return;
+  const date=dateById(form.dateId);
+  const d={id:form.id||uid(),type:form.type,N:form.N,players:form.players.slice(),results:{},tricks:form.tricks,dubbel:!!form.dubbel};
+  form.players.forEach(p=>d.results[p]=form.results[p]!==false);
+  if(form.id){ const i=date.deals.findIndex(x=>x.id===form.id); date.deals[i]=d; } else date.deals.push(d);
+  save(); closeForm(); render();
+}
+
+/* ============ Start ============ */
+state=loadLocal();
+render();
+initFirebase();
+</script>
+</body>
+</html>
